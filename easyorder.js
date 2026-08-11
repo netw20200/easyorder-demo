@@ -124,10 +124,34 @@
         email: email
       };
 
-      console.log("EasyOrder:", order);
+      try {
+  const response = await fetch(
+    "https://easyorder.netw20200.workers.dev/",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(order)
+    }
+  );
 
-      message.textContent =
-        "✅ Заказ подготовлен!";
+  const data = await response.json();
+
+  console.log("EasyOrder server:", data);
+
+  if (data.success) {
+    message.textContent = "✅ Заказ отправлен!";
+  } else {
+    message.textContent = "❌ Сервер не принял заказ.";
+  }
+
+} catch (error) {
+  console.error("EasyOrder error:", error);
+
+  message.textContent =
+    "❌ Не удалось отправить заказ.";
+}
     });
   }
 
