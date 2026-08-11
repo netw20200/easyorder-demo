@@ -37,9 +37,8 @@
 
 
   function createEasyOrder() {
-    const product = button.dataset.product || "Товар";
-    const price = Number(button.dataset.price || 0);
-
+    const product = EasyOrder.config.product;
+const price = Number(EasyOrder.config.price);
     const overlay = document.createElement("div");
     overlay.className = "easyorder-overlay";
 
