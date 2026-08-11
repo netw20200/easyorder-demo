@@ -71,14 +71,9 @@
         $25
       </div>
 
-      <button
-        class="easyorder-buy"
-        data-product="Tattoo T-shirt"
-        data-price="25">
-
-        Купить
-
-      </button>
+      <button id="easyorder-buy">
+  Купить
+</button>
 
     </div>
 
