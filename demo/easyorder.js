@@ -2,7 +2,7 @@
   "use strict";
 
   const EasyOrder = {
-
+window.EasyOrder =
     config: {
       product: "Товар",
       price: 0,
