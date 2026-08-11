@@ -85,7 +85,7 @@
   </div>
 
 
-  <script src="../easyorder.js"></script>
-
+  
+<script src="easyorder.js"></script>
 </body>
 </html>
