@@ -93,8 +93,7 @@
       }
     });
 
-    submitButton.addEventListener("click", function () {
-
+    submitButton.addEventListener("click", async function () {
       const name =
         overlay.querySelector(".easyorder-name").value.trim();
 
