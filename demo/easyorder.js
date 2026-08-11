@@ -1,6 +1,6 @@
 (function () {
   "use strict";
-
+alert("НОВЫЙ EASYORDER.JS");
   window.EasyOrder = {
 
     config: {
