@@ -175,26 +175,27 @@ const price = Number(EasyOrder.config.price);
 
   function init() {
 
-    document
-      .querySelectorAll(".easyorder-buy")
-      .forEach(function (button) {
+  EasyOrder.init({
+    product: "Tattoo T-shirt",
+    price: 25,
+    currency: "$",
+    buttonText: "Купить",
+    successMessage: "✅ Заказ отправлен!"
+  });
 
-        button.addEventListener("click", function () {
-          createEasyOrder(button);
-        });
+}
 
-      });
+if (document.readyState === "loading") {
 
-  }
+  document.addEventListener(
+    "DOMContentLoaded",
+    init
+  );
 
-  if (document.readyState === "loading") {
+} else {
 
-    document.addEventListener("DOMContentLoaded", init);
+  init();
 
-  } else {
-
-    init();
-
-  }
+}
 
 })();
