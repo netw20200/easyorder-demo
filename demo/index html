@@ -1,1 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>EasyOrder Demo</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    .demo {
+      max-width: 500px;
+      margin: auto;
+    }
+
+    .demo h1 {
+      text-align: center;
+    }
+
+    .product {
+      background: #fff;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+
+    .product h2 {
+      margin-top: 0;
+    }
+
+    .price {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    .easyorder-buy {
+      width: 100%;
+      padding: 15px;
+      border: 0;
+      border-radius: 10px;
+      background: #111;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="demo">
+
+    <h1>EasyOrder Demo</h1>
+
+    <div class="product">
+
+      <h2>Tattoo T-shirt</h2>
+
+      <p>
+        Тестовый товар для демонстрации EasyOrder.
+      </p>
+
+      <div class="price">
+        $25
+      </div>
+
+      <button
+        class="easyorder-buy"
+        data-product="Tattoo T-shirt"
+        data-price="25">
+
+        Купить
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <script src="../easyorder.js"></script>
+
+</body>
+</html>
