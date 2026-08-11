@@ -176,8 +176,8 @@ const price = Number(EasyOrder.config.price);
   function init() {
 
   EasyOrder.init({
-    product: "Tattoo T-shirt",
-    price: 25,
+    product: "Test Product",
+price: 99,
     currency: "$",
     buttonText: "Купить",
     successMessage: "✅ Заказ отправлен!"
