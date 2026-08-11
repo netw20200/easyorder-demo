@@ -1,7 +1,42 @@
 (function () {
   "use strict";
 
-  function createEasyOrder(button) {
+  const EasyOrder = {
+
+    config: {
+      product: "Товар",
+      price: 0,
+      currency: "$",
+      buttonText: "Купить",
+      successMessage: "✅ Заказ отправлен!"
+    },
+
+    init: function (options) {
+
+      this.config = {
+        ...this.config,
+        ...options
+      };
+
+      const button =
+        document.getElementById("easyorder-buy");
+
+      if (!button) {
+        console.error("EasyOrder: кнопка не найдена.");
+        return;
+      }
+
+      button.textContent =
+        this.config.buttonText;
+
+      button.addEventListener("click", function () {
+        createEasyOrder();
+      });
+    }
+  };
+
+
+  function createEasyOrder() {
     const product = button.dataset.product || "Товар";
     const price = Number(button.dataset.price || 0);
 
