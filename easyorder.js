@@ -6,10 +6,14 @@
     const price = Number(button.dataset.price || 0);
 
     const overlay = document.createElement("div");
+    overlay.className = "easyorder-overlay";
 
     overlay.innerHTML = `
       <div class="easyorder-window">
-        <button class="easyorder-close">&times;</button>
+
+        <button class="easyorder-close" type="button">
+          &times;
+        </button>
 
         <h2>Оформление заказа</h2>
 
@@ -20,47 +24,57 @@
 
         <label>
           Количество
-          <input class="easyorder-quantity" type="number" value="1" min="1">
+          <input class="easyorder-quantity"
+                 type="number"
+                 value="1"
+                 min="1">
         </label>
 
         <label>
           Ваше имя
-          <input class="easyorder-name" type="text" placeholder="Введите имя">
+          <input class="easyorder-name"
+                 type="text"
+                 placeholder="Введите имя">
         </label>
 
         <label>
           Телефон
-          <input class="easyorder-phone" type="tel" placeholder="+380...">
+          <input class="easyorder-phone"
+                 type="tel"
+                 placeholder="+380...">
         </label>
 
         <label>
           Email
-          <input class="easyorder-email" type="email" placeholder="example@gmail.com">
+          <input class="easyorder-email"
+                 type="email"
+                 placeholder="example@gmail.com">
         </label>
 
         <div class="easyorder-total">
           Сумма: $<span>0.00</span>
         </div>
 
-        <button class="easyorder-submit">
+        <button class="easyorder-submit" type="button">
           Оформить заказ
         </button>
 
         <div class="easyorder-message"></div>
+
       </div>
     `;
 
     document.body.appendChild(overlay);
 
-    const windowBox = overlay.querySelector(".easyorder-window");
-    const closeButton = overlay.querySelector(".easyorder-close");
     const quantity = overlay.querySelector(".easyorder-quantity");
     const total = overlay.querySelector(".easyorder-total span");
-    const submit = overlay.querySelector(".easyorder-submit");
+    const closeButton = overlay.querySelector(".easyorder-close");
+    const submitButton = overlay.querySelector(".easyorder-submit");
     const message = overlay.querySelector(".easyorder-message");
 
     function updateTotal() {
       const qty = Math.max(1, Number(quantity.value) || 1);
+
       quantity.value = qty;
       total.textContent = (price * qty).toFixed(2);
     }
@@ -79,14 +93,24 @@
       }
     });
 
-    submit.addEventListener("click", async function () {
-      const name = overlay.querySelector(".easyorder-name").value.trim();
-      const phone = overlay.querySelector(".easyorder-phone").value.trim();
-      const email = overlay.querySelector(".easyorder-email").value.trim();
-      const qty = Math.max(1, Number(quantity.value) || 1);
+    submitButton.addEventListener("click", function () {
+
+      const name =
+        overlay.querySelector(".easyorder-name").value.trim();
+
+      const phone =
+        overlay.querySelector(".easyorder-phone").value.trim();
+
+      const email =
+        overlay.querySelector(".easyorder-email").value.trim();
+
+      const qty =
+        Math.max(1, Number(quantity.value) || 1);
 
       if (!name || !phone) {
-        message.textContent = "Введите имя и телефон.";
+        message.textContent =
+          "Введите имя и телефон.";
+
         return;
       }
 
@@ -102,26 +126,72 @@
 
       console.log("EasyOrder:", order);
 
-      message.textContent = "Заказ подготовлен.";
-
-      /*
-        Позже здесь подключим отправку заказа
-        на сервер покупателя.
-      */
+      message.textContent =
+        "✅ Заказ подготовлен!";
     });
   }
+
+
+  function loadCSS() {
+
+    if (document.querySelector(
+      'link[data-easyorder-css]'
+    )) {
+      return;
+    }
+
+    const script =
+      document.currentScript;
+
+    const css =
+      document.createElement("link");
+
+    css.rel = "stylesheet";
+
+    css.href =
+      new URL(
+        "css/easyorder.css",
+        script.src
+      ).href;
+
+    css.dataset.easyorderCss = "true";
+
+    document.head.appendChild(css);
+  }
+
 
   function init() {
-    document.querySelectorAll(".easyorder-buy").forEach(function (button) {
-      button.addEventListener("click", function () {
-        createEasyOrder(button);
+
+    loadCSS();
+
+    document
+      .querySelectorAll(".easyorder-buy")
+      .forEach(function (button) {
+
+        button.addEventListener(
+          "click",
+          function () {
+            createEasyOrder(button);
+          }
+        );
+
       });
-    });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+
+  if (
+    document.readyState === "loading"
+  ) {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      init
+    );
+
   } else {
+
     init();
+
   }
+
 })();
