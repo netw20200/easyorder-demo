@@ -1,17 +1,64 @@
 (function () {
   "use strict";
+alert("НОВЫЙ EASYORDER.JS");
+  window.EasyOrder = {
 
-  function createEasyOrder(button) {
-    const product = button.dataset.product || "Товар";
-    const price = Number(button.dataset.price || 0);
+    config: {
+      product: "Товар",
+      price: 0,
+      currency: "$",
+      buttonText: "Купить",
+      successMessage: "✅ Заказ отправлен!"
+    },
 
-    const overlay = document.createElement("div");
-    overlay.className = "easyorder-overlay";
+    init: function (options) {
+
+      this.config = {
+        ...this.config,
+        ...options
+      };
+
+      const button =
+        document.getElementById("easyorder-buy");
+
+      if (!button) {
+        console.error("EasyOrder: кнопка не найдена.");
+        return;
+      }
+
+      button.textContent =
+        this.config.buttonText;
+
+      button.addEventListener("click", function () {
+        createEasyOrder();
+      });
+    }
+  };
+
+
+  function createEasyOrder() {
+
+    const product =
+      window.EasyOrder.config.product;
+
+    const price =
+      Number(window.EasyOrder.config.price);
+
+    const currency =
+      window.EasyOrder.config.currency;
+
+    const overlay =
+      document.createElement("div");
+
+    overlay.className =
+      "easyorder-overlay";
 
     overlay.innerHTML = `
       <div class="easyorder-window">
 
-        <button class="easyorder-close" type="button">
+        <button
+          class="easyorder-close"
+          type="button">
           &times;
         </button>
 
@@ -19,43 +66,52 @@
 
         <div class="easyorder-product">
           <strong>${product}</strong>
-          <span>$${price.toFixed(2)}</span>
+          <span>
+            ${currency}${price.toFixed(2)}
+          </span>
         </div>
 
         <label>
           Количество
-          <input class="easyorder-quantity"
-                 type="number"
-                 value="1"
-                 min="1">
+          <input
+            class="easyorder-quantity"
+            type="number"
+            value="1"
+            min="1">
         </label>
 
         <label>
           Ваше имя
-          <input class="easyorder-name"
-                 type="text"
-                 placeholder="Введите имя">
+          <input
+            class="easyorder-name"
+            type="text"
+            placeholder="Введите имя">
         </label>
 
         <label>
           Телефон
-          <input class="easyorder-phone"
-                 type="tel"
-                 placeholder="+380...">
+          <input
+            class="easyorder-phone"
+            type="tel"
+            placeholder="+380...">
         </label>
 
         <label>
           Email
-          <input class="easyorder-email"
-                 type="email"
-                 placeholder="example@gmail.com">
+          <input
+            class="easyorder-email"
+            type="email"
+            placeholder="example@gmail.com">
         </label>
 
         <div class="easyorder-total">
-          Сумма: $<span>0.00</span>
+          Сумма:
+          ${currency}<span>0.00</span>
         </div>
 
-        <button class="easyorder-submit" type="button">
+        <button
+          class="easyorder-submit"
+          type="button">
           Оформить заказ
         </button>
 
@@ -66,144 +122,210 @@
 
     document.body.appendChild(overlay);
 
-    const quantity = overlay.querySelector(".easyorder-quantity");
-    const total = overlay.querySelector(".easyorder-total span");
-    const closeButton = overlay.querySelector(".easyorder-close");
-    const submitButton = overlay.querySelector(".easyorder-submit");
-    const message = overlay.querySelector(".easyorder-message");
+    const quantity =
+      overlay.querySelector(".easyorder-quantity");
+
+    const total =
+      overlay.querySelector(
+        ".easyorder-total span"
+      );
+
+    const closeButton =
+      overlay.querySelector(".easyorder-close");
+
+    const submitButton =
+      overlay.querySelector(".easyorder-submit");
+
+    const message =
+      overlay.querySelector(".easyorder-message");
+
 
     function updateTotal() {
-      const qty = Math.max(1, Number(quantity.value) || 1);
+
+      const qty =
+        Math.max(
+          1,
+          Number(quantity.value) || 1
+        );
 
       quantity.value = qty;
-      total.textContent = (price * qty).toFixed(2);
+
+      total.textContent =
+        (price * qty).toFixed(2);
     }
+
 
     updateTotal();
 
-    quantity.addEventListener("input", updateTotal);
 
-    closeButton.addEventListener("click", function () {
-      overlay.remove();
-    });
+    quantity.addEventListener(
+      "input",
+      updateTotal
+    );
 
-    overlay.addEventListener("click", function (event) {
-      if (event.target === overlay) {
+
+    closeButton.addEventListener(
+      "click",
+      function () {
         overlay.remove();
       }
-    });
+    );
 
-    submitButton.addEventListener("click", async function () {
-      const name =
-        overlay.querySelector(".easyorder-name").value.trim();
 
-      const phone =
-        overlay.querySelector(".easyorder-phone").value.trim();
+    overlay.addEventListener(
+      "click",
+      function (event) {
 
-      const email =
-        overlay.querySelector(".easyorder-email").value.trim();
+        if (event.target === overlay) {
+          overlay.remove();
+        }
 
-      const qty =
-        Math.max(1, Number(quantity.value) || 1);
-
-      if (!name || !phone) {
-        message.textContent =
-          "Введите имя и телефон.";
-
-        return;
       }
-
-      const order = {
-        product: product,
-        price: price,
-        quantity: qty,
-        total: price * qty,
-        name: name,
-        phone: phone,
-        email: email
-      };
-
-      try {
-  const response = await fetch(
-    "https://easyorder.netw20200.workers.dev/",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(order)
-    }
-  );
-
-  const data = await response.json();
-
-  console.log("EasyOrder server:", data);
-
-  if (data.success) {
-    message.textContent = "✅ Заказ отправлен!";
-  } else {
-    message.textContent = "❌ Сервер не принял заказ.";
-  }
-
-} catch (error) {
-  console.error("EasyOrder error:", error);
-
-  message.textContent =
-    "❌ Не удалось отправить заказ.";
-}
-    });
-  }
+    );
 
 
-  function loadCSS() {
+    submitButton.addEventListener(
+      "click",
+      async function () {
 
-    if (document.querySelector(
-      'link[data-easyorder-css]'
-    )) {
-      return;
-    }
+        const name =
+          overlay
+            .querySelector(".easyorder-name")
+            .value
+            .trim();
 
-    const script =
-      document.currentScript;
+        const phone =
+          overlay
+            .querySelector(".easyorder-phone")
+            .value
+            .trim();
 
-    const css =
-      document.createElement("link");
+        const email =
+          overlay
+            .querySelector(".easyorder-email")
+            .value
+            .trim();
 
-    css.rel = "stylesheet";
+        const qty =
+          Math.max(
+            1,
+            Number(quantity.value) || 1
+          );
 
-    css.href =
-      new URL(
-        "css/easyorder.css",
-        script.src
-      ).href;
 
-    css.dataset.easyorderCss = "true";
+        if (!name || !phone) {
 
-    document.head.appendChild(css);
+          message.textContent =
+            "Введите имя и телефон.";
+
+          return;
+        }
+
+
+        const order = {
+
+          product: product,
+
+          price: price,
+
+          quantity: qty,
+
+          total: price * qty,
+
+          name: name,
+
+          phone: phone,
+
+          email: email
+        };
+
+
+        message.textContent =
+          "⏳ Отправляем заказ...";
+
+
+        try {
+
+          const response =
+            await fetch(
+              "https://easyorder.netw20200.workers.dev/",
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body:
+                  JSON.stringify(order)
+              }
+            );
+
+
+          const data =
+            await response.json();
+
+
+          console.log(
+            "EasyOrder server:",
+            data
+          );
+
+
+          if (data.success) {
+
+            message.textContent =
+              window.EasyOrder.config
+                .successMessage;
+
+          } else {
+
+            message.textContent =
+              "❌ Сервер не принял заказ.";
+
+          }
+
+
+        } catch (error) {
+
+          console.error(
+            "EasyOrder error:",
+            error
+          );
+
+          message.textContent =
+            "❌ Не удалось связаться с сервером.";
+
+        }
+
+      }
+    );
   }
 
 
   function init() {
 
-    loadCSS();
+    window.EasyOrder.init({
 
-    document
-      .querySelectorAll(".easyorder-buy")
-      .forEach(function (button) {
+      product: "Test Product",
 
-        button.addEventListener(
-          "click",
-          function () {
-            createEasyOrder(button);
-          }
-        );
+      price: 99,
 
-      });
+      currency: "$",
+
+      buttonText: "Купить",
+
+      successMessage:
+        "✅ Заказ отправлен!"
+    });
+
   }
 
 
   if (
-    document.readyState === "loading"
+    document.readyState ===
+    "loading"
   ) {
 
     document.addEventListener(
