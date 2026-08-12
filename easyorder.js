@@ -1,5 +1,6 @@
 (function () {
   "use strict";
+
   window.EasyOrder = {
 
     config: {
@@ -10,12 +11,20 @@
       successMessage: "✅ Заказ отправлен!"
     },
 
+    initialized: false,
+
     init: function (options) {
+
+      if (this.initialized) {
+        return;
+      }
 
       this.config = {
         ...this.config,
         ...options
       };
+
+      loadCSS();
 
       const button =
         document.getElementById("easyorder-buy");
@@ -31,11 +40,58 @@
       button.addEventListener("click", function () {
         createEasyOrder();
       });
+
+      this.initialized = true;
     }
   };
 
 
+  function loadCSS() {
+
+    if (document.querySelector(
+      'link[data-easyorder-css]'
+    )) {
+      return;
+    }
+
+    const script =
+      document.querySelector(
+        'script[src$="easyorder.js"], script[src*="/easyorder.js"]'
+      );
+
+    if (!script) {
+      console.error(
+        "EasyOrder: easyorder.js не найден."
+      );
+      return;
+    }
+
+    const css =
+      document.createElement("link");
+
+    css.rel = "stylesheet";
+
+    css.href =
+      new URL(
+        "css/easyorder.css",
+        script.src
+      ).href;
+
+    css.dataset.easyorderCss =
+      "true";
+
+    document.head.appendChild(css);
+  }
+
+
   function createEasyOrder() {
+
+    const existing =
+      document.querySelector(".easyorder-overlay");
+
+    if (existing) {
+      existing.remove();
+    }
 
     const product =
       window.EasyOrder.config.product;
@@ -243,6 +299,9 @@
           "⏳ Отправляем заказ...";
 
 
+        submitButton.disabled = true;
+
+
         try {
 
           const response =
@@ -283,6 +342,7 @@
             message.textContent =
               "❌ Сервер не принял заказ.";
 
+            submitButton.disabled = false;
           }
 
 
@@ -296,6 +356,7 @@
           message.textContent =
             "❌ Не удалось связаться с сервером.";
 
+          submitButton.disabled = false;
         }
 
       }
@@ -304,42 +365,7 @@
 
 
   function init() {
-function loadCSS() {
 
-  if (document.querySelector(
-    'link[data-easyorder-css]'
-  )) {
-    return;
-  }
-
-  const script =
-    document.querySelector(
-      'script[src*="easyorder.js"]'
-    );
-
-  if (!script) {
-    console.error(
-      "EasyOrder: easyorder.js не найден."
-    );
-    return;
-  }
-
-  const css =
-    document.createElement("link");
-
-  css.rel = "stylesheet";
-
-  css.href =
-    new URL(
-      "css/easyorder.css",
-      script.src
-    ).href;
-
-  css.dataset.easyorderCss =
-    "true";
-
-  document.head.appendChild(css);
-}
     window.EasyOrder.init({
 
       product: "Test Product",
