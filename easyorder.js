@@ -304,7 +304,42 @@
 
 
   function init() {
-loadCSS();
+function loadCSS() {
+
+  if (document.querySelector(
+    'link[data-easyorder-css]'
+  )) {
+    return;
+  }
+
+  const script =
+    document.querySelector(
+      'script[src*="easyorder.js"]'
+    );
+
+  if (!script) {
+    console.error(
+      "EasyOrder: easyorder.js не найден."
+    );
+    return;
+  }
+
+  const css =
+    document.createElement("link");
+
+  css.rel = "stylesheet";
+
+  css.href =
+    new URL(
+      "css/easyorder.css",
+      script.src
+    ).href;
+
+  css.dataset.easyorderCss =
+    "true";
+
+  document.head.appendChild(css);
+}
     window.EasyOrder.init({
 
       product: "Test Product",
