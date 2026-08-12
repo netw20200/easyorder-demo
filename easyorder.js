@@ -304,7 +304,7 @@
 
 
   function init() {
-
+loadCSS();
     window.EasyOrder.init({
 
       product: "Test Product",
